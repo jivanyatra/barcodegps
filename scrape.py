@@ -31,7 +31,7 @@ def getpage(sessionurl, usern, passw, scrapeurl):
     # User-Agent (this is cheating, ok?)
     br.addheaders = [('User-agent', 'Chrome')]
     
-    # The site we will navigate into, handling it's session
+    # The site we will navigate into, handling its session
     br.open(sessionurl)
     
     # Inspect name of the form
