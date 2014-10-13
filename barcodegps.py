@@ -19,3 +19,25 @@ while running:
 #    elif inp == regex for imei:
 #        addimei()
     elif inp == '
+""" Trying to do this stuff in a dictionary-based way...
+
+inp = raw_input('==> ')
+
+if imei:
+if sim:
+else:
+
+commands: { 'clear' : scrape.clearlisting,
+            'v' : validate,
+            'validate' : validate,
+            's' : showdata,
+            'r' : removeline,
+            'd' : removeline,
+            'spoof' : spoofvalidation
+}
+validate()
+showdata()
+removeline()
+spoofvalidation()
+#example commands['spoof']()
+"""
