@@ -5,5 +5,17 @@
 """
 
 import re
+#import scrape
 
-
+running = True
+while running:
+    print "Welcome to the barcodegps app! Enter a command,\n"
+    print "scan an imei/sim, or type help or ? for a list."
+    inp = raw_input('==> ')
+    if inp == 'q' or inp == 'quit':
+        quit()
+    elif inp == 'clear':
+        scrape.clearlisting()
+#    elif inp == regex for imei:
+#        addimei()
+    elif inp == '
