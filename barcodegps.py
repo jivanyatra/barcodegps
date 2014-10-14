@@ -41,3 +41,18 @@ removeline()
 spoofvalidation()
 #example commands['spoof']()
 """
+"""This function gets the return page from the scrape function, stores it
+in 'data' and then parses it, searching for a line that matches the imei,
+and has a GPS code of 7011, which is the SOS function button we use to
+validate proper programming of units. Then, it'll store it along with the
+imei and sim numbers.
+"""
+
+def parse_validation():
+    data = scrape.scrape()
+    for line in data:
+        find = imei
+        csvalue = [ x.strip() for x in line.split(',') ]
+        if (csvalue[0].endswith(find) == True) and (csvalue[1] == '7011'):
+            store = line
+
