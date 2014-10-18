@@ -1,0 +1,5 @@
+sessionurl = ''
+usern = ''
+passw = ''
+scrapeurl = ''
+clearurl = ''
