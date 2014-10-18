@@ -6,6 +6,8 @@
 
 import re
 import scrape
+import config
+from conf.txt import *
 
 def checkinput(input):
     commands: { 'clear' : scrape.clearlisting,
