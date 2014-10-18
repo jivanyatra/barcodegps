@@ -10,7 +10,7 @@ import config
 from conf.txt import *
 
 def checkinput(input):
-    commands: { 'clear' : scrape.clearlisting,
+    commands: { 'clear' : clear,
             'v' : validate,
             'validate' : validate,
             'r' : removeline,
@@ -30,24 +30,29 @@ def showdisplay():
     """This function is responsible for displaying data on screen
     using PrettyTable
     """
+    print msg
     pass
 
-def parse_validation():
+def validate():
     """This function gets the return page from the scrape function, stores it
     in 'data' and then parses it, searching for a line that matches the imei,
     and has a GPS code of 7011, which is the SOS function button we use to
     validate proper programming of units. Then, it'll store it along with the
     imei and sim numbers.
     """
-    data = scrape.scrape()
+    date = scrape.getpage(sessionurl, uname, passw, clearurl)
     for line in data:
         find = imei
         csvalue = [ x.strip() for x in line.split(',') ]
         if (csvalue[0].endswith(find) == True) and (csvalue[1] == '7011'):
-            store = line
+            valstr = line
+        break
+    # put valstr in a list or something.
+    msg = "IMEI #" + find + " validated and added to table"
 
-def validate():
-    pass
+def clear():
+    scrape.clearpage(sessionurl, uname, passw, clearurl)
+    msg = "Validation listing page cleared!"
 
 def removeline():
     """Remove a line of data, probably used when encountering a bad
@@ -60,7 +65,8 @@ def spoofvalidation(imei):
     function was called with. It does NOT scrape the website for the
     actual validation code, it merely creates it as a string.
     """
-    pass
+    valstr = "www.spytecgps.com :$$" + imei + ",7011,//,::,,,0,54," \
+             + "0,1,1672,0,8,1.0,0,0.0,0,31,1,0,0.0 "
 
 def help():
     """This prints out the list of commands and basic things for how the
