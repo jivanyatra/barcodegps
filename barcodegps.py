@@ -7,7 +7,16 @@
 import re
 import scrape
 import config
+import datetime
+import sqlite3
+import prettytable
 from conf.txt import *
+
+def choosefile(path):
+    pass
+    
+def getdate():
+    date = datetime.datetime.today().strftime("%m-%d-%y")
 
 def checkinput(input):
     commands: { 'clear' : clear,
