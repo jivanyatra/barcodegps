@@ -8,12 +8,17 @@ import re
 import scrape
 import config
 import datetime
-import sqlite3
-import prettytable
+#import sqlite3
+#import prettytable
 from conf.txt import *
 
-def choosefile(path):
-    pass
+def choosefilename():
+    """Choose a filename for output, in a csv format
+    """
+    filename = raw_input "Please choose a filename, or press enter "\
+                          + "for default (uses today's date): "
+    if not filename:
+        filename = 'spytecgps_date.csv'
     
 def getdate():
     date = datetime.datetime.today().strftime("%m-%d-%y")
@@ -25,8 +30,8 @@ def checkinput(input):
             'r' : removeline,
             'd' : removeline,
             'spoof' : spoofvalidation
-            'q' : savexit
-            'quit' : savexit
+            'q' : closeapp
+            'quit' : closeapp
             'h' : help
             'help' : help
     }
@@ -39,17 +44,22 @@ def showdisplay():
     """This function is responsible for displaying data on screen
     using PrettyTable
     """
-    print msg
-    pass
+    if msg:
+        print msg
+    if imei:
+        print "IMEI # scanned: " + imei
+    if sim:
+        print "SIM # scanned: " + sim
 
-def validate():
+def validate(imei):
     """This function gets the return page from the scrape function, stores it
     in 'data' and then parses it, searching for a line that matches the imei,
     and has a GPS code of 7011, which is the SOS function button we use to
     validate proper programming of units. Then, it'll store it along with the
     imei and sim numbers.
     """
-    date = scrape.getpage(sessionurl, uname, passw, clearurl)
+    valstr = ''
+    data = scrape.getpage(sessionurl, uname, passw, clearurl)
     for line in data:
         find = imei
         csvalue = [ x.strip() for x in line.split(',') ]
@@ -58,6 +68,7 @@ def validate():
         break
     # put valstr in a list or something.
     msg = "IMEI #" + find + " validated and added to table"
+    opensavefile()
 
 def clear():
     scrape.clearpage(sessionurl, uname, passw, clearurl)
@@ -82,11 +93,23 @@ def help():
     program works.
     """
 
-def savexit():
-    pass
+def opensavefile():
+    fh = open(filename, 'a')
+    lineout = imei + ',' + sim + ',' + valstr + '\n'
+    fh.write(lineout)
+    fh.close()
+    imei = None
+    sim = None
+    valstr = None
+    
+def closeapp():
+    fh.close()
+    quit()
 
 if __name__ == "__main__":
     running = True
+    getdate()
+    choosefilename()
     while running:
         inp = ''
         showdisplay()
@@ -94,8 +117,11 @@ if __name__ == "__main__":
         print "scan an imei/sim, or type help or ? for a list."
         inp = raw_input('==> ')
         #Trying to do this stuff in a dictionary-based way...
-        if imei:
-        if sim:
+        imeire = r'^[0-9]{15}$'
+        if re.search(imeire, input):
+            imei = str(input)
+        simre = r'^[0-9]{19}F*$'
+        if re.search(simre, input):
+            sim = str(input)
         else:
             checkinput(inp)
-
