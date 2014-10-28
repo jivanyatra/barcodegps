@@ -6,11 +6,15 @@
 
 import re
 import scrape
-import config
+#import config
 import datetime
 #import sqlite3
 #import prettytable
-from conf.txt import *
+from conf import *
+
+msg = ''
+imei = ''
+sim = ''
 
 def choosefilename():
     """Choose a filename for output, in a csv format
@@ -26,15 +30,15 @@ def getdate():
     date = datetime.datetime.today().strftime("%m-%d-%y")
 
 def checkinput(input):
-    commands: { 'clear' : clear,
+    commands = { 'clear' : clear,
             'v' : validate,
             'validate' : validate,
             'r' : removeline,
             'd' : removeline,
-            'spoof' : spoofvalidation
-            'q' : closeapp
-            'quit' : closeapp
-            'h' : help
+            'spoof' : spoofvalidation,
+            'q' : closeapp,
+            'quit' : closeapp,
+            'h' : help,
             'help' : help
     }
     try:
@@ -67,10 +71,11 @@ def validate(imei):
         csvalue = [ x.strip() for x in line.split(',') ]
         if (csvalue[0].endswith(find) == True) and (csvalue[1] == '7011'):
             valstr = line
-        break
-    # put valstr in a list or something.
-    msg = "IMEI #" + find + " validated and added to table"
-    opensavefile()
+            msg = "IMEI #" + find + " validated and added to file"
+            opensavefile()
+            break
+        else:
+            msg = "No validation found! Try again!"
 
 def clear():
     scrape.clearpage(sessionurl, uname, passw, clearurl)
@@ -105,7 +110,10 @@ def opensavefile():
     valstr = None
     
 def closeapp():
-    fh.close()
+    try:
+        fh.close()
+    except:
+        print "file closed"
     quit()
 
 if __name__ == "__main__":
