@@ -15,8 +15,10 @@ from conf.txt import *
 def choosefilename():
     """Choose a filename for output, in a csv format
     """
-    filename = raw_input "Please choose a filename, or press enter "\
-                          + "for default (uses today's date): "
+    msg = "Please choose a filename, or press enter for default" \
+          + "(uses today's date): "
+    filename = raw_input(msg)
+
     if not filename:
         filename = 'spytecgps_date.csv'
     
