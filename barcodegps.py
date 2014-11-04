@@ -130,10 +130,10 @@ if __name__ == "__main__":
         inp = raw_input('==> ')
         #Trying to do this stuff in a dictionary-based way...
         imeire = r'^[0-9]{15}$'
-        if re.search(imeire, input):
-            imei = str(input)
+        if re.search(imeire, inp):
+            imei = str(inp)
         simre = r'^[0-9]{19}F*$'
-        if re.search(simre, input):
-            sim = str(input)
+        if re.search(simre, inp):
+            sim = str(inp)
         else:
             checkinput(inp)
