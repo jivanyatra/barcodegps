@@ -25,6 +25,8 @@ def choosefilename():
     msg = "Please choose a filename, or press enter for default" \
           + "(uses today's date): "
     filename = raw_input(msg)
+    if filename[-3:] != 'csv'
+        filename = filename + '.csv'
 
     if not filename:
         filename = 'spytecgps_'+ date + '.csv'
@@ -59,6 +61,7 @@ def showdisplay():
         print "IMEI # scanned: " + imei
     if sim:
         print "SIM # scanned: " + sim
+    msg = ''
 
 def validate(imei):
     """This function gets the return page from the scrape function, stores it
