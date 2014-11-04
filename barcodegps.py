@@ -15,6 +15,9 @@ from conf import *
 msg = ''
 imei = ''
 sim = ''
+filename = ''
+date = ''
+valstr = ''
 
 def choosefilename():
     """Choose a filename for output, in a csv format
@@ -24,7 +27,7 @@ def choosefilename():
     filename = raw_input(msg)
 
     if not filename:
-        filename = 'spytecgps_date.csv'
+        filename = 'spytecgps_'+ date + '.csv'
     
 def getdate():
     date = datetime.datetime.today().strftime("%m-%d-%y")
@@ -64,7 +67,6 @@ def validate(imei):
     validate proper programming of units. Then, it'll store it along with the
     imei and sim numbers.
     """
-    valstr = ''
     data = scrape.getpage(sessionurl, uname, passw, clearurl)
     for line in data:
         find = imei
