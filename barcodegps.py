@@ -6,10 +6,7 @@
 
 import re
 import scrape
-#import config
 import datetime
-#import sqlite3
-#import prettytable
 from conf import *
 
 msg = ''
@@ -18,6 +15,9 @@ sim = ''
 filename = ''
 date = ''
 valstr = ''
+imeire = r'^[0-9]{15}$'
+simre = r'^[0-9]{19}F*$'
+
 
 def choosefilename():
     """Choose a filename for output, in a csv format
@@ -25,7 +25,7 @@ def choosefilename():
     msg = "Please choose a filename, or press enter for default" \
           + "(uses today's date): "
     filename = raw_input(msg)
-    if filename[-3:] != 'csv'
+    if filename[-3:] != 'csv':
         filename = filename + '.csv'
 
     if not filename:
@@ -41,13 +41,21 @@ def checkinput(input):
             'r' : removeline,
             'd' : removeline,
             'spoof' : spoofvalidation,
-            'q' : closeapp,
-            'quit' : closeapp,
+            'q' : 'exit',
+            'quit' : 'exit',
             'h' : help,
             'help' : help
     }
     try:
-        commands[input]()
+        if commands[input] != exit:
+            commands[input]()
+        else:
+            try:
+                fh.close()
+                print "file closed"
+            except:
+                print "file already closed"
+            return True
     except:
         print "Invalid input. Please try something else, or ask for help."
 
@@ -55,8 +63,9 @@ def showdisplay():
     """This function is responsible for displaying data on screen
     using PrettyTable
     """
-    if msg:
-        print msg
+    if msg == '':
+        msg = "BARcodeGPS"
+    print msg
     if imei:
         print "IMEI # scanned: " + imei
     if sim:
@@ -76,8 +85,7 @@ def validate(imei):
         csvalue = [ x.strip() for x in line.split(',') ]
         if (csvalue[0].endswith(find) == True) and (csvalue[1] == '7011'):
             valstr = line
-            msg = "IMEI #" + find + " validated and added to file"
-            opensavefile()
+            msg = "IMEI # " + find + " validated"
             break
         else:
             msg = "No validation found! Try again!"
@@ -90,7 +98,10 @@ def removeline():
     """Remove a line of data, probably used when encountering a bad
     unit or a bad sim, and you need to swap units/sims.
     """
-    pass
+    imei = ''
+    sim = ''
+    valstr = ''
+    print "IMEI and SIM deleted!"
 
 def spoofvalidation(imei):
     """This recreates the proper validation code for the argument the
@@ -106,37 +117,30 @@ def help():
     """
 
 def opensavefile():
-    fh = open(filename, 'a')
-    lineout = imei + ',' + sim + ',' + valstr + '\n'
-    fh.write(lineout)
-    fh.close()
-    imei = None
-    sim = None
-    valstr = None
+    if imei and sim and valstr:
+        with open(filename, 'a') as fh:
+            lineout = imei + ',' + sim + ',' + valstr + '\n'
+            fh.write(lineout)
+        imei = ''
+        sim = ''
+        valstr = ''
+        print "IMEI, SIM, and Validation saved!"
     
-def closeapp():
-    try:
-        fh.close()
-    except:
-        print "file closed"
-    quit()
-
 if __name__ == "__main__":
-    running = True
     getdate()
     choosefilename()
-    while running:
+    while True:
         inp = ''
         showdisplay()
         print "Welcome to the barcodegps app! Enter a command,\n"
         print "scan an imei/sim, or type help or ? for a list."
         inp = raw_input('==> ')
         #Trying to do this stuff in a dictionary-based way...
-        imeire = r'^[0-9]{15}$'
         if re.search(imeire, inp):
             imei = str(inp)
-        simre = r'^[0-9]{19}F*$'
-        if re.search(simre, inp):
+        elif re.search(simre, inp):
             sim = str(inp)
         else:
             checkinput(inp)
+        opensavefile()
+    print "Exiting..."
