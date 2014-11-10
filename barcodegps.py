@@ -23,7 +23,7 @@ def choosefilename():
     global filename
     """Choose a filename for output, in a csv format
     """
-    msg = "Please choose a filename, or press enter for default\n" 
+    msg = "Please choose a filename, or press enter for default\n" \
           + "(uses today's date): "
     filename = raw_input(msg)
     if filename[-3:] != 'csv':
@@ -72,7 +72,7 @@ def showinfo():
     if sim:
         print "SIM # scanned: " + sim
 
-def validate(imei):
+def validate():
     """This function gets the return page from the scrape function, stores it
     in 'data' and then parses it, searching for a line that matches the imei,
     and has a GPS code of 7011, which is the SOS function button we use to
@@ -137,6 +137,8 @@ def opensavefile(file):
         print "IMEI, SIM, and/or Validation missing; file not saved."
     
 if __name__ == "__main__":
+    global imei
+    global sim
     getdate()
     choosefilename()
     while True:
@@ -147,9 +149,9 @@ if __name__ == "__main__":
         inp = raw_input('==> ')
         #Trying to do this stuff in a dictionary-based way...
         if re.search(imeire, inp):
-            global imei = str(inp)
+            imei = str(inp)
         elif re.search(simre, inp):
-            global sim = str(inp)
+            sim = str(inp)
         else:
             checkinput(inp)
         opensavefile(filename)
